@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import BuilderPage from './pages/BuilderPage'
-import DashBoardPage from './pages/DashBoardPage'
+import DashBoardPage from './pages/DashboardPage'
 import PreviewPage from './pages/PreviewPage'
 import TemplatePage from './pages/TemplatePage'
 
