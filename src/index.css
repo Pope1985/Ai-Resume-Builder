@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide the page UI */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset page background */
+  body {
+    background: white !important;
+  }
+
+  /* Make resume fill the page */
+  .resume-print-area {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+  }
+}
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
