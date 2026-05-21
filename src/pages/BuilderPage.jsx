@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 const STORAGE_KEY = "resumes";
+const API_URL = "https://backend-d2co.onrender.com";
 
 const SECTIONS = [
   { id: "Personal", icon: User, desc: "Contact info & summary" },
@@ -257,13 +258,26 @@ function AiButton({ loading, onClick }) {
   );
 }
 
+function Field({ label, field, placeholder, as = "input", rows = 3, resume, update }) {
+  return (
+    <div>
+      <label className={labelCls}>{label}</label>
+      {as === "textarea" ? (
+        <textarea rows={rows} className={inputCls + " resize-none leading-relaxed"} placeholder={placeholder} value={resume[field]} onChange={(e) => update(field, e.target.value)} />
+      ) : (
+        <input className={inputCls} placeholder={placeholder} value={resume[field]} onChange={(e) => update(field, e.target.value)} />
+      )}
+    </div>
+  );
+}
+
 // ── Main Component ───────────────────────────────────────────────────────────
 export default function BuilderPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const previewRef = useRef(null);
   const [active, setActive] = useState("Personal");
-  const [showPreview, setShowPreview] = useState(false); // mobile preview toggle
+  const [showPreview, setShowPreview] = useState(false);
   const [resume, setResume] = useState({
     name: "", email: "", phone: "", location: "", summary: "",
     experience: [{ company: "", role: "", duration: "", bullets: "" }],
@@ -310,28 +324,23 @@ export default function BuilderPage() {
     if (!text?.trim()) { alert("Please enter some text first."); return; }
     setAiLoading((prev) => ({ ...prev, [loadingKey]: true }));
     try {
-      const res = await fetch("http://localhost:5000/api/ai-suggest", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+      const res = await fetch(`${API_URL}/api/ai-suggest`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
       if (!res.ok) throw new Error("Server error");
       const data = await res.json();
       const suggestion = data.suggestion || "";
       if (!suggestion) { alert("AI returned an empty response."); return; }
       setAiModal({ suggestion, onApply: () => { onApply(suggestion); setAiModal(null); } });
     } catch (err) {
-      alert("Could not reach the AI. Make sure the backend server is running on port 5000.");
+      console.error(err);
+      alert("Could not reach the AI server. Please try again.");
     } finally {
       setAiLoading((prev) => ({ ...prev, [loadingKey]: false }));
     }
   };
-
-  const Field = ({ label, field, placeholder, as = "input", rows = 3 }) => (
-    <div>
-      <label className={labelCls}>{label}</label>
-      {as === "textarea"
-        ? <textarea key={field} rows={rows} className={inputCls + " resize-none leading-relaxed"} placeholder={placeholder} value={resume[field]} onChange={(e) => update(field, e.target.value)} />
-        : <input key={field} className={inputCls} placeholder={placeholder} value={resume[field]} onChange={(e) => update(field, e.target.value)} />
-      }
-    </div>
-  );
 
   return (
     <div className="h-screen bg-[#080809] text-white flex flex-col overflow-hidden">
@@ -346,7 +355,6 @@ export default function BuilderPage() {
           <span className="font-semibold text-white/90 tracking-tight text-sm sm:text-base">ResumeAI</span>
         </div>
 
-        {/* Mobile preview toggle */}
         <button
           onClick={() => setShowPreview(!showPreview)}
           className="lg:hidden flex items-center gap-1.5 text-xs text-white/50 hover:text-white transition border border-white/10 px-3 py-1.5 rounded-lg"
@@ -370,7 +378,6 @@ export default function BuilderPage() {
       {/* Main layout */}
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
 
-        {/* Sidebar - horizontal scroll on mobile */}
         <nav className={`w-full lg:w-52 shrink-0 border-b lg:border-b-0 lg:border-r border-white/6 p-2 sm:p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-y-auto ${showPreview ? "hidden lg:flex" : "flex"}`}>
           {SECTIONS.map(({ id, icon: Icon, desc }) => (
             <button key={id} onClick={() => setActive(id)} className={`group flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 sm:py-3 rounded-xl text-left transition-all duration-200 min-w-max lg:min-w-0 ${active === id ? "bg-violet-500/15 border border-violet-500/20 text-white" : "text-white/40 hover:text-white/70 hover:bg-white/4 border border-transparent"}`}>
@@ -386,17 +393,16 @@ export default function BuilderPage() {
           ))}
         </nav>
 
-        {/* Form panel */}
         <main className={`w-full lg:w-[320px] shrink-0 border-b lg:border-b-0 lg:border-r border-white/6 overflow-y-auto p-4 sm:p-5 flex flex-col gap-4 sm:gap-5 ${showPreview ? "hidden lg:flex" : "flex"}`}>
 
           {active === "Personal" && (
             <>
               <div><h2 className="text-base font-semibold text-white/90">Personal info</h2><p className="text-xs text-white/30 mt-0.5">Your contact details and intro</p></div>
               <div className="grid grid-cols-2 gap-3">
-                <div className="col-span-2"><Field label="Full name" field="name" placeholder="Ada Lovelace" /></div>
-                <Field label="Email" field="email" placeholder="ada@mail.com" />
-                <Field label="Phone" field="phone" placeholder="+234 800 000" />
-                <div className="col-span-2"><Field label="Location" field="location" placeholder="Lagos, Nigeria" /></div>
+                <div className="col-span-2"><Field label="Full name" field="name" placeholder="Ada Lovelace" resume={resume} update={update} /></div>
+                <Field label="Email" field="email" placeholder="ada@mail.com" resume={resume} update={update} />
+                <Field label="Phone" field="phone" placeholder="+234 800 000" resume={resume} update={update} />
+                <div className="col-span-2"><Field label="Location" field="location" placeholder="Lagos, Nigeria" resume={resume} update={update} /></div>
               </div>
               <div>
                 <label className={labelCls}>Professional summary</label>
