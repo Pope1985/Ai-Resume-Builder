@@ -406,7 +406,7 @@ export default function BuilderPage() {
               </div>
               <div>
                 <label className={labelCls}>Professional summary</label>
-                <textarea key="summary" rows={4} className={inputCls + " resize-none leading-relaxed"} placeholder="Brief intro about yourself..." value={resume.summary} onChange={(e) => update("summary", e.target.value)} />
+                <textarea rows={4} className={inputCls + " resize-none leading-relaxed"} placeholder="Brief intro about yourself..." value={resume.summary} onChange={(e) => update("summary", e.target.value)} />
                 <AiButton loading={!!aiLoading["summary"]} onClick={() => handleAiSuggest("summary", resume.summary || `${resume.name} — ${resume.skills}`, (text) => update("summary", text))} />
               </div>
             </>
@@ -421,12 +421,12 @@ export default function BuilderPage() {
                   {[{ label: "Company", key: "company", placeholder: "Acme Corp" }, { label: "Job title", key: "role", placeholder: "Software Engineer" }, { label: "Duration", key: "duration", placeholder: "2022 – Present" }].map(({ label, key, placeholder }) => (
                     <div key={key}>
                       <label className={labelCls}>{label}</label>
-                      <input key={`exp-${i}-${key}`} className={inputCls} placeholder={placeholder} value={exp[key]} onChange={(e) => { const u = [...resume.experience]; u[i] = { ...u[i], [key]: e.target.value }; update("experience", u); }} />
+                      <input className={inputCls} placeholder={placeholder} value={exp[key]} onChange={(e) => { const u = [...resume.experience]; u[i] = { ...u[i], [key]: e.target.value }; update("experience", u); }} />
                     </div>
                   ))}
                   <div>
                     <label className={labelCls}>Bullet points (one per line)</label>
-                    <textarea key={`exp-bullets-${i}`} rows={3} className={inputCls + " resize-none leading-relaxed"} placeholder={"Built X, improving Y by 40%\nLed a team of 5 engineers"} value={exp.bullets} onChange={(e) => { const u = [...resume.experience]; u[i] = { ...u[i], bullets: e.target.value }; update("experience", u); }} />
+                    <textarea rows={3} className={inputCls + " resize-none leading-relaxed"} placeholder={"Built X, improving Y by 40%\nLed a team of 5 engineers"} value={exp.bullets} onChange={(e) => { const u = [...resume.experience]; u[i] = { ...u[i], bullets: e.target.value }; update("experience", u); }} />
                     <AiButton loading={!!aiLoading[`exp-${i}`]} onClick={() => handleAiSuggest(`exp-${i}`, exp.bullets || `${exp.role} at ${exp.company} (${exp.duration})`, (text) => { const u = [...resume.experience]; u[i] = { ...u[i], bullets: text }; update("experience", u); })} />
                   </div>
                 </div>
@@ -444,7 +444,7 @@ export default function BuilderPage() {
                   {[{ label: "Institution", key: "school", placeholder: "University of Lagos" }, { label: "Degree", key: "degree", placeholder: "B.Sc Computer Science" }, { label: "Years", key: "year", placeholder: "2019 – 2023" }].map(({ label, key, placeholder }) => (
                     <div key={key}>
                       <label className={labelCls}>{label}</label>
-                      <input key={`edu-${i}-${key}`} className={inputCls} placeholder={placeholder} value={edu[key]} onChange={(e) => { const u = [...resume.education]; u[i] = { ...u[i], [key]: e.target.value }; update("education", u); }} />
+                      <input className={inputCls} placeholder={placeholder} value={edu[key]} onChange={(e) => { const u = [...resume.education]; u[i] = { ...u[i], [key]: e.target.value }; update("education", u); }} />
                     </div>
                   ))}
                 </div>
@@ -458,7 +458,7 @@ export default function BuilderPage() {
               <div><h2 className="text-base font-semibold text-white/90">Skills</h2><p className="text-xs text-white/30 mt-0.5">Separate with commas</p></div>
               <div>
                 <label className={labelCls}>Technologies & tools</label>
-                <textarea key="skills" rows={6} className={inputCls + " resize-none leading-relaxed"} placeholder="React, TypeScript, Node.js, PostgreSQL, Figma, AWS" value={resume.skills} onChange={(e) => update("skills", e.target.value)} />
+                <textarea rows={6} className={inputCls + " resize-none leading-relaxed"} placeholder="React, TypeScript, Node.js, PostgreSQL, Figma, AWS" value={resume.skills} onChange={(e) => update("skills", e.target.value)} />
                 <AiButton loading={!!aiLoading["skills"]} onClick={() => handleAiSuggest("skills", resume.skills || resume.experience.map((e) => `${e.role} at ${e.company}`).join(", "), (text) => update("skills", text))} />
               </div>
               {resume.skills && (
@@ -478,12 +478,12 @@ export default function BuilderPage() {
                   {[{ label: "Title", key: "title", placeholder: "E-commerce Website" }, { label: "Link", key: "link", placeholder: "https://example.com" }].map(({ label, key, placeholder }) => (
                     <div key={key}>
                       <label className={labelCls}>{label}</label>
-                      <input key={`proj-${i}-${key}`} className={inputCls} placeholder={placeholder} value={proj[key]} onChange={(e) => { const u = [...resume.projects]; u[i] = { ...u[i], [key]: e.target.value }; update("projects", u); }} />
+                      <input className={inputCls} placeholder={placeholder} value={proj[key]} onChange={(e) => { const u = [...resume.projects]; u[i] = { ...u[i], [key]: e.target.value }; update("projects", u); }} />
                     </div>
                   ))}
                   <div>
                     <label className={labelCls}>Description</label>
-                    <textarea key={`proj-desc-${i}`} rows={3} className={inputCls + " resize-none leading-relaxed"} placeholder="Describe the project..." value={proj.description} onChange={(e) => { const u = [...resume.projects]; u[i] = { ...u[i], description: e.target.value }; update("projects", u); }} />
+                    <textarea rows={3} className={inputCls + " resize-none leading-relaxed"} placeholder="Describe the project..." value={proj.description} onChange={(e) => { const u = [...resume.projects]; u[i] = { ...u[i], description: e.target.value }; update("projects", u); }} />
                     <AiButton loading={!!aiLoading[`proj-${i}`]} onClick={() => handleAiSuggest(`proj-${i}`, proj.description || `Project: ${proj.title}`, (text) => { const u = [...resume.projects]; u[i] = { ...u[i], description: text }; update("projects", u); })} />
                   </div>
                 </div>
@@ -497,7 +497,7 @@ export default function BuilderPage() {
               <div><h2 className="text-base font-semibold text-white/90">Hobbies</h2><p className="text-xs text-white/30 mt-0.5">Personal interests</p></div>
               <div>
                 <label className={labelCls}>Interests & hobbies</label>
-                <textarea key="hobbies" rows={6} className={inputCls + " resize-none leading-relaxed"} placeholder="Reading, Hiking, Photography, Cooking" value={resume.hobbies} onChange={(e) => update("hobbies", e.target.value)} />
+                <textarea rows={6} className={inputCls + " resize-none leading-relaxed"} placeholder="Reading, Hiking, Photography, Cooking" value={resume.hobbies} onChange={(e) => update("hobbies", e.target.value)} />
               </div>
               {resume.hobbies && (
                 <div className="flex flex-wrap gap-2 p-4 rounded-2xl bg-white/3 border border-white/6">
